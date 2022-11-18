@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from ninja import ModelSchema, Router, Schema
 
 from .models import FinancialQuarter, Project, ProjectStage, ProjectType, Tier
+from dbasik.users.models import DfTGroup
 
 router = Router()
 
@@ -23,6 +24,12 @@ class ProjectTypeSchema(ModelSchema):
 class ProjectStageSchema(ModelSchema):
     class Config:
         model = ProjectStage
+        model_fields = "__all__"
+
+
+class ProjectGroupSchema(ModelSchema):
+    class Config:
+        model = DfTGroup
         model_fields = "__all__"
 
 
@@ -50,6 +57,16 @@ def tier(request, tier_id: int):
 @router.get("/tiers", response=List[TierSchema])
 def tiers(request):
     return Tier.objects.all()
+
+
+@router.get("/stages", response=List[ProjectStageSchema])
+def project_types(request):
+    return ProjectStage.objects.all()
+
+
+@router.get("/groups", response=List[ProjectGroupSchema])
+def project_types(request):
+    return DfTGroup.objects.all()
 
 
 @router.get("/projects", response=List[ProjectSchema])
